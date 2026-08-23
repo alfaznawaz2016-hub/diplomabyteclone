@@ -1,0 +1,634 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DiplomaByte — Study Smart, not just hard.</title>
+<meta name="description" content="AI-powered edtech platform for Bangladeshi Diploma in Engineering (CST) students, built around Google NotebookLM notebooks aligned to the 2022 BTEB syllabus.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  :root{
+    --bg:#ffffff; --bg-elev:#f8fafc; --surface:#ffffff;
+    --text:#0f172a; --text-muted:#64748b; --border:#e2e8f0;
+    --accent-from:#6366f1; --accent-to:#8b5cf6; --accent-solid:#6366f1;
+    --shadow:0 4px 20px -2px rgba(15,23,42,0.08);
+    --mono:'JetBrains Mono',monospace;
+  }
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--text);font-family:'Inter','Noto Sans Bengali',system-ui,sans-serif;-webkit-font-smoothing:antialiased;transition:background .25s,color .25s}
+  [lang="bn"]{font-family:'Noto Sans Bengali',sans-serif}
+  main,footer{position:relative;z-index:1}
+
+  /* ============ CSE MODE VARIABLES ============ */
+  body.cse{
+    --bg:#04090f; --bg-elev:#081019; --surface:#0a1622;
+    --text:#e2f9e9; --text-muted:#7fa394; --border:#123041;
+    --accent-from:#22c55e; --accent-to:#22d3ee; --accent-solid:#4ade80;
+    --shadow:0 0 24px rgba(34,197,94,0.12);
+    font-family:var(--mono),'Noto Sans Bengali',monospace;
+  }
+  body.cse::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+    background-image:linear-gradient(rgba(34,211,238,.05) 1px,transparent 1px),
+                     linear-gradient(90deg,rgba(34,211,238,.05) 1px,transparent 1px);
+    background-size:56px 56px;}
+  body.cse h1,body.cse h2,body.cse h3,body.cse h4,body.cse .nav-link,body.cse button{font-family:var(--mono),'Noto Sans Bengali',monospace}
+
+  .cse-only{display:none}
+  body.cse .cse-only{display:revert}
+  body.cse .clean-only{display:none}
+
+  .accent-gradient{background-image:linear-gradient(135deg,var(--accent-from),var(--accent-to))}
+  .accent-text{background-image:linear-gradient(135deg,var(--accent-from),var(--accent-to));-webkit-background-clip:text;background-clip:text;color:transparent}
+  body.cse .logo-badge{box-shadow:0 0 18px rgba(74,222,128,.75)}
+  .brand-cursor{animation:blink 1s steps(2) infinite;color:var(--accent-solid)}
+  @keyframes blink{50%{opacity:0}}
+
+  .site-header{position:sticky;top:0;z-index:50;backdrop-filter:blur(10px);
+    background:var(--bg);background:color-mix(in srgb,var(--bg) 82%,transparent);
+    border-bottom:1px solid var(--border)}
+
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:1rem;padding:1.5rem;box-shadow:var(--shadow)}
+  body.cse .card{position:relative;padding-top:3rem;overflow:hidden}
+  body.cse .card::before{content:"";position:absolute;top:0;left:0;right:0;height:2.25rem;
+    background:#0a1420;border-bottom:1px solid var(--border);
+    background-image:radial-gradient(circle 4px at 16px 50%,#ff5f56 97%,transparent),
+                     radial-gradient(circle 4px at 34px 50%,#ffbd2e 97%,transparent),
+                     radial-gradient(circle 4px at 52px 50%,#27c93f 97%,transparent);}
+
+  .cta-primary{display:inline-flex;align-items:center;gap:.625rem;padding:.875rem 1.5rem;border-radius:.875rem;font-weight:600;color:#fff;background-image:linear-gradient(135deg,var(--accent-from),var(--accent-to));transition:transform .15s,box-shadow .15s;box-shadow:0 6px 20px -6px rgba(99,102,241,.55)}
+  .cta-primary:hover{transform:translateY(-2px)}
+  .cta-primary:focus-visible{outline:3px solid var(--accent-solid);outline-offset:3px}
+  body.cse .cta-primary{color:#03150a;box-shadow:0 0 24px rgba(74,222,128,.55)}
+
+  .cta-secondary{display:inline-flex;align-items:center;gap:.5rem;padding:.75rem 1.25rem;border-radius:.75rem;font-weight:500;color:var(--text);background:var(--surface);border:1px solid var(--border);transition:border-color .15s,transform .15s}
+  .cta-secondary:hover{border-color:var(--accent-solid);transform:translateY(-1px)}
+  body.cse .cta-secondary:hover{box-shadow:0 0 14px rgba(74,222,128,.35)}
+
+  .notebook-hero{position:relative;overflow:hidden;border-radius:1.25rem;padding:2rem;background-image:linear-gradient(135deg,var(--accent-from),var(--accent-to));color:#fff}
+  body.cse .notebook-hero{background-image:linear-gradient(135deg,#14532d,#0e7490);padding-top:3.5rem;box-shadow:0 0 34px rgba(34,197,94,.25)}
+  body.cse .notebook-hero::after{content:"";position:absolute;top:0;left:0;right:0;height:2.5rem;background:rgba(4,10,16,.85);border-bottom:1px solid rgba(74,222,128,.25);
+    background-image:radial-gradient(circle 4px at 16px 50%,#ff5f56 97%,transparent),
+                     radial-gradient(circle 4px at 34px 50%,#ffbd2e 97%,transparent),
+                     radial-gradient(circle 4px at 52px 50%,#27c93f 97%,transparent);}
+  .notebook-hero::before{content:"";position:absolute;inset:0;background-image:radial-gradient(circle at 20% 20%,rgba(255,255,255,.22),transparent 40%);pointer-events:none}
+
+  .coming-soon-card{border-radius:1.25rem;padding:2rem;text-align:center;background:repeating-linear-gradient(45deg,var(--bg-elev),var(--bg-elev) 10px,var(--surface) 10px,var(--surface) 20px);border:1px dashed var(--border)}
+
+  .nav-link{color:var(--text);font-weight:500;padding:.5rem .875rem;border-radius:.5rem;transition:background .15s}
+  .nav-link:hover{background:var(--bg-elev);color:var(--accent-solid)}
+  body.cse .nav-link:hover{text-shadow:0 0 10px rgba(74,222,128,.8)}
+
+  .dropdown{position:relative}
+  .dropdown-menu{display:none;position:absolute;top:100%;left:0;min-width:270px;padding:.5rem;margin-top:.5rem;background:var(--surface);border:1px solid var(--border);border-radius:.75rem;box-shadow:var(--shadow);z-index:40}
+  .dropdown:hover>.dropdown-menu,.dropdown:focus-within>.dropdown-menu,.dropdown[data-open="true"]>.dropdown-menu{display:block}
+  .dropdown-menu button{display:block;width:100%;text-align:left;padding:.5rem .75rem;border-radius:.5rem;color:var(--text);font-size:.9rem;background:transparent;border:0;cursor:pointer}
+  .dropdown-menu button:hover{background:var(--bg-elev);color:var(--accent-solid)}
+
+  .mobile-drawer{position:fixed;inset:0 0 0 auto;width:min(85vw,320px);background:var(--surface);transform:translateX(100%);transition:transform .25s;z-index:60;padding:1.5rem;overflow-y:auto;border-left:1px solid var(--border)}
+  .mobile-drawer.open{transform:translateX(0)}
+  .drawer-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.45);opacity:0;pointer-events:none;transition:opacity .2s;z-index:55}
+  .drawer-backdrop.open{opacity:1;pointer-events:auto}
+  .accordion-toggle{cursor:pointer;user-select:none}
+  .accordion-content{display:none;padding-left:1rem;border-left:2px solid var(--border);margin-top:.25rem}
+  .accordion-content.open{display:block}
+
+  .tip-card{background:linear-gradient(135deg,rgba(99,102,241,.08),rgba(139,92,246,.08));border:1px solid var(--border);border-radius:.875rem;padding:1.25rem}
+  body.cse .tip-card{background:rgba(34,197,94,.06)}
+  .icon-chip{width:2.5rem;height:2.5rem;border-radius:.75rem;display:inline-flex;align-items:center;justify-content:center;background-image:linear-gradient(135deg,rgba(99,102,241,.15),rgba(139,92,246,.15));color:var(--accent-solid);font-size:1.25rem}
+  body.cse .icon-chip{background-image:linear-gradient(135deg,rgba(74,222,128,.15),rgba(34,211,238,.15));text-shadow:0 0 10px rgba(74,222,128,.7)}
+
+  .section-tag{font-size:.8rem;letter-spacing:.06em;color:var(--text-muted);text-transform:uppercase;font-weight:600}
+  body.cse .section-tag{text-transform:none;color:#4ade80;font-family:var(--mono)}
+  body.cse .section-tag::before{content:"// "}
+
+  /* terminal window (hero video chrome) */
+  .term-bar{display:none;align-items:center;gap:6px;padding:.55rem .9rem;background:#0a1420;border-bottom:1px solid var(--border);font-size:.75rem;color:var(--text-muted);font-family:var(--mono)}
+  body.cse .term-bar{display:flex}
+  .term-bar .dot{width:10px;height:10px;border-radius:9999px}
+  .dot.r{background:#ff5f56}.dot.y{background:#ffbd2e}.dot.g{background:#27c93f}
+  .term-title{margin:0 auto}
+  .term-line{display:none;padding:.75rem 1rem;background:#0a1420;font-family:var(--mono);font-size:.875rem;color:#e5e7eb}
+  body.cse .term-line{display:block}
+  body.cse .term-window{border:1px solid var(--border);border-radius:1rem;overflow:hidden;box-shadow:0 0 34px rgba(34,197,94,.18)}
+  .video-wrapper{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:1rem;box-shadow:var(--shadow)}
+  body.cse .video-wrapper{border-radius:0;box-shadow:none}
+  .video-wrapper iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+
+  /* syntax token colors (CSE mode only) */
+  body.cse .tk-o{color:#fbbf24}
+  body.cse .tk-g{color:#4ade80}
+  body.cse .tk-p{color:#c084fc}
+  body.cse .tk-c{color:#22d3ee}
+  .ln{color:var(--text-muted);opacity:.65;font-size:.72rem;margin-right:.6rem;user-select:none;font-family:var(--mono)}
+
+  .chip{display:inline-flex;align-items:center;gap:.4rem;padding:.6rem 1rem;border-radius:.6rem;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:.85rem;cursor:pointer;transition:border-color .15s,box-shadow .15s}
+  .chip:hover{border-color:var(--accent-solid)}
+  body.cse .chip{font-family:var(--mono)}
+  body.cse .chip::before{content:"$ ";color:#4ade80}
+  body.cse .chip:hover{box-shadow:0 0 14px rgba(74,222,128,.35)}
+
+  .prompt-box{white-space:pre-wrap;background:var(--bg-elev);border:1px solid var(--border);border-radius:.75rem;padding:1.25rem;font-family:var(--mono);font-size:.875rem;line-height:1.7}
+  body.cse .prompt-box{background:#0a1420;box-shadow:inset 0 0 24px rgba(34,211,238,.05)}
+
+  footer a,footer button{color:var(--text-muted)}
+  footer a:hover,footer button:hover{color:var(--accent-solid)}
+</style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+<!-- =================== NAV =================== -->
+<header class="site-header">
+  <nav class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+    <button data-route="home" class="flex items-center gap-3 font-bold text-lg">
+      <span class="logo-badge w-9 h-9 rounded-xl accent-gradient flex items-center justify-center text-white font-bold">DB</span>
+      <span class="clean-only hidden sm:inline">DiplomaByte</span>
+      <span class="cse-only hidden sm:inline">&gt; DiplomaByte<span class="brand-cursor">|</span></span>
+    </button>
+
+    <ul class="hidden lg:flex items-center gap-1">
+      <li><button data-route="home" class="nav-link">Home</button></li>
+      <li><button data-route="about" class="nav-link">About</button></li>
+      <li class="dropdown">
+        <button class="nav-link flex items-center gap-1">5th semester CST <span class="text-xs">▾</span></button>
+        <ul class="dropdown-menu">
+          <li><button data-route="subject" data-slug="computer-architecture-microprocessor">Computer Architecture & Microprocessor</button></li>
+          <li><button data-route="subject" data-slug="app-development-java">App Development with Java</button></li>
+          <li><button data-route="subject" data-slug="data-communication">Data Communication</button></li>
+          <li><button data-route="subject" data-slug="accounting">Accounting</button></li>
+          <li><button data-route="subject" data-slug="web-design-development-2">Web Design & Development - 2</button></li>
+          <li><button data-route="subject" data-slug="operating-system">Operating System</button></li>
+          <li><button data-route="subject" data-slug="project-work-1">Project Work - 1</button></li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <button class="nav-link flex items-center gap-1">6th semester CST <span class="text-xs">▾</span></button>
+        <ul class="dropdown-menu">
+          <li><button data-route="subject" data-slug="sensor-iot-system">Sensor and IoT System</button></li>
+          <li><button data-route="subject" data-slug="principles-marketing">Principles of Marketing</button></li>
+          <li><button data-route="subject" data-slug="computer-networking">Computer Networking</button></li>
+          <li><button data-route="subject" data-slug="industrial-management">Industrial Management</button></li>
+          <li><button data-route="subject" data-slug="surveillance-security-system">Surveillance Security System</button></li>
+          <li><button data-route="subject" data-slug="microcontroller-system-design">Microcontroller Based System Design</button></li>
+          <li><button data-route="subject" data-slug="database-management-system">Database Management System</button></li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <button class="nav-link flex items-center gap-1">7th semester CST <span class="text-xs">▾</span></button>
+        <ul class="dropdown-menu">
+          <li><button data-route="subject" data-slug="innovation-entrepreneurship">Innovation & Entrepreneurship (25853)</button></li>
+          <li><button data-route="subject" data-slug="digital-marketing-techniques">Digital Marketing Techniques (28571)</button></li>
+          <li><button data-route="subject" data-slug="network-administration">Network Administration (28572)</button></li>
+          <li><button data-route="subject" data-slug="cyber-security-ethics">Cyber Security & Ethics (28573)</button></li>
+          <li><button data-route="subject" data-slug="apps-development-project">Apps Development Project (28574)</button></li>
+          <li><button data-route="subject" data-slug="multimedia-animation">Multimedia & Animation</button></li>
+          <li><button data-route="subject" data-slug="project-work-2">Project Work-2 (28576)</button></li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <button class="nav-link flex items-center gap-1">Productivity Prompts <span class="text-xs">▾</span></button>
+        <ul class="dropdown-menu" id="dd-prompts"></ul>
+      </li>
+    </ul>
+
+    <div class="flex items-center gap-2">
+      <button id="mode-toggle" aria-label="Toggle CSE mode" class="nav-link border border-[var(--border)] text-sm">
+        <span class="clean-only">&gt;_ CSE_Mode</span>
+        <span class="cse-only">☀ Clean_Mode</span>
+      </button>
+      <button id="hamburger-btn" aria-label="Open menu" class="lg:hidden w-9 h-9 rounded-lg border border-[var(--border)] flex items-center justify-center">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </div>
+  </nav>
+</header>
+
+<main id="view" class="flex-1"></main>
+
+<!-- =================== FOOTER =================== -->
+<footer class="border-t border-[var(--border)] mt-8">
+  <div class="max-w-7xl mx-auto px-4 py-10 grid md:grid-cols-3 gap-8">
+    <div>
+      <div class="flex items-center gap-2 font-bold text-lg mb-2">
+        <span class="w-7 h-7 rounded-lg accent-gradient flex items-center justify-center text-white text-xs">DB</span>
+        DiplomaByte
+      </div>
+      <p lang="bn" class="text-sm text-[var(--text-muted)]">"Study Smart, not just hard."</p>
+    </div>
+    <div>
+      <h4 class="font-semibold mb-3">Explore</h4>
+      <ul class="space-y-1 text-sm">
+        <li><button data-route="home">Home</button></li>
+        <li><button data-route="about">About</button></li>
+        <li><button data-route="prompt-list">Productivity Prompts</button></li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="font-semibold mb-3">Connect</h4>
+      <ul class="space-y-1 text-sm">
+        <li><a href="https://forms.gle/sf3hpQVvmB2iJHTY8" target="_blank" rel="noopener noreferrer">Feedback form ↗</a></li>
+        <li><a href="https://py-palace-academy.lovable.app" target="_blank" rel="noopener noreferrer">Pyticon Learning ↗</a></li>
+        <li><a href="https://sites.google.com/view/diplomabyte/productivity-promts?authuser=0" target="_blank" rel="noopener noreferrer">Original prompts page ↗</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="border-t border-[var(--border)] py-4 text-center text-xs text-[var(--text-muted)]">© <span id="year"></span> DiplomaByte · Built for Bangladeshi Diploma engineers.</div>
+</footer>
+
+<!-- =================== MOBILE DRAWER =================== -->
+<div id="drawer-backdrop" class="drawer-backdrop"></div>
+<aside id="mobile-drawer" class="mobile-drawer">
+  <div class="flex justify-between items-center mb-6">
+    <span class="font-bold">menu</span>
+    <button id="drawer-close" aria-label="Close menu" class="w-8 h-8 rounded border border-[var(--border)]">✕</button>
+  </div>
+  <button data-route="home" data-close-drawer class="block py-2 font-medium">Home</button>
+  <button data-route="about" data-close-drawer class="block py-2 font-medium">About</button>
+  <div class="py-2">
+    <div class="accordion-toggle font-medium flex justify-between items-center">5th semester CST <span>+</span></div>
+    <div class="accordion-content space-y-1">
+      <button class="block py-1 text-sm" data-route="subject" data-slug="computer-architecture-microprocessor" data-close-drawer>Computer Architecture</button>
+      <button class="block py-1 text-sm" data-route="subject" data-slug="app-development-java" data-close-drawer>App Development (Java)</button>
+      <button class="block py-1 text-sm" data-route="subject" data-slug="data-communication" data-close-drawer>Data Communication</button>
+      <button class="block py-1 text-sm" data-route="subject" data-slug="accounting" data-close-drawer>Accounting</button>
+      <button class="block py-1 text-sm" data-route="subject" data-slug="web-design-development-2" data-close-drawer>Web Design - 2</button>
+      <button class="block py-1 text-sm" data-route="subject" data-slug="operating-system" data-close-drawer>Operating System</button>
+      <button class="block py-1 text-sm" data-route="subject" data-slug="project-work-1" data-close-drawer>Project Work - 1</button>
+    </div>
+  </div>
+  <div class="py-2">
+    <div class="accordion-toggle font-medium flex justify-between items-center">6th semester CST <span>+</span></div>
+    <div class="accordion-content space-y-1">
+      <button class="block py-1 text-sm" data-route="subject" data-slug="sensor-iot-system" data-close-drawer>Sensor & IoT</button>
+      <button class="block py-1 text-sm" data-route="subject" data-slug="principles-marketing" data-close-drawer>Principles of Marketing</button>
+      <button class="block py-1 text-sm" data-route="subject" data-slug="computer-networking" data-close-drawer>Computer Networking</button>
+      <button class="block py-1 text-sm" data-route="subject" data-slug="industrial-management" data-close-drawer>Industrial Management</button>
+      <button class="block py-1 text-sm" data-route="subject" data-slug="surveillance-security-system" data-close-drawer>Surveillance Security</button>
+      <button class="block py-1 text-sm" data-route="subject" data-slug="microcontroller-system-design" data-close-drawer>Microcontroller Design</button>
+      <button class="block py-1 text-sm" data-route="subject" data-slug="database-management-system" data-close-drawer>DBMS</button>
+    </div>
+  </div>
+  <div class="py-2">
+    <div class="accordion-toggle font-medium flex justify-between items-center">7th semester CST <span>+</span></div>
+    <div class="accordion-content space-y-1">
+      <button class="block py-1 text-sm" data-route="subject" data-slug="innovation-entrepreneurship" data-close-drawer>Innovation (25853)</button>
+      <button class="block py-1 text-sm" data-route="subject" data-slug="digital-marketing-techniques" data-close-drawer>Digital Marketing (28571)</button>
+      <button class="block py-1 text-sm" data-route="subject" data-slug="network-administration" data-close-drawer>Network Admin (28572)</button>
+      <button class="block py-1 text-sm" data-route="subject" data-slug="cyber-security-ethics" data-close-drawer>Cyber Security (28573)</button>
+      <button class="block py-1 text-sm" data-route="subject" data-slug="apps-development-project" data-close-drawer>Apps Project (28574)</button>
+      <button class="block py-1 text-sm" data-route="subject" data-slug="multimedia-animation" data-close-drawer>Multimedia</button>
+      <button class="block py-1 text-sm" data-route="subject" data-slug="project-work-2" data-close-drawer>Project Work-2</button>
+    </div>
+  </div>
+  <div class="py-2"><button class="block py-2 font-medium" data-route="prompt-list" data-close-drawer>Productivity Prompts</button></div>
+</aside>
+
+<!-- ============================================================ -->
+<!-- ================ SINGLE SOURCE OF TRUTH: DATA ============== -->
+<!-- ============================================================ -->
+<script>
+const NOTEBOOKS = [
+  {slug:"computer-architecture-microprocessor",subject:"Computer Architecture and Microprocessor",semester:"5th",buttonLabel:"Click here",url:"https://notebooklm.google.com/notebook/c47e13ab-2f18-4bdf-beab-18ef5b0cf918",intro:"To get access my notebook, click here."},
+  {slug:"industrial-management",subject:"Industrial Management",semester:"6th",buttonLabel:"Industrial Management Notebook",url:"https://notebooklm.google.com/notebook/0cefa854-432b-4ba2-b2e1-6f52ff2dd107"},
+  {slug:"surveillance-security-system",subject:"Surveillance Security System",semester:"6th",buttonLabel:"Surveillance NoteBook",url:"https://notebooklm.google.com/notebook/8aa09d45-1fd8-41be-963b-dd271bd1da3a",priceNote:"The value of our Notebook is BDT 650, but for this subject we are giving it completely free (BDT 0). You can access any of its contents free of cost.",resources:["Card 1","Card 2","Card 3","Card 4","Card 5"]},
+  {slug:"microcontroller-system-design",subject:"Microcontroller Based System Design and Development",semester:"6th",buttonLabel:"Microcontroller Notebook",url:"https://notebooklm.google.com/notebook/6ee6760b-d709-41b5-b675-8ab984eac774",heading:"Infographs for core basics",resources:["Core Concepts of Microcontroller and Embedded system","The heart of embedded systems","Introduction to Arduino","Details about Atmel Studio","Microcontroller and communication protocols","Arduino and IoT","IoT and Robotics","About MPLAB X IDE","MPLAB X IDE vs Arduino IDE","Microcontroller vs microprocessor","Computer vs Embedded System"]},
+  {slug:"database-management-system",subject:"Database Management System",semester:"6th",buttonLabel:"Try Our DBMS NoteBook Now",url:"https://notebooklm.google.com/notebook/bb9df80f-e3e4-45d3-8a7d-512d6cae638c",priceNote:"Value of this Notebook is BDT 1000 (6 months subscription), but for this subject it's free (BDT 0).",heading:"Infographs for DBMS core basics",resources:["Infograph 1: Conventional File Management system vs DBMS","Infograph 2: Parts of SQL","Infograph 3: Purpose of DBMS","Infograph 4: Responsibility of Database Manager","Infograph 5: Responsibility of a Database Administrator","Infograph 6: SQL Aggregate functions","Infograph 7: SQL Clause","Infograph 8: SQL Set Operations","Infograph 9: SQL vs QBE vs Datalog","Infograph 10: Relational Algebra","Infograph 11: Entity and Keys","Converting entity set to table","Infograph 13: Strong vs Weak entity","All you need to know about DBMS"]},
+  {slug:"innovation-entrepreneurship",subject:"Innovation and Entrepreneureship (25853)",semester:"7th",buttonLabel:"Innovation and Entrapreneureship Notebook",url:"https://notebooklm.google.com/notebook/e5f2d7e3-bbe8-4dd2-9bf7-05fea4bd3862"},
+  {slug:"digital-marketing-techniques",subject:"Digital Marketing Techniques (28571)",semester:"7th",buttonLabel:"Digital Marketing Notebook",url:"https://notebook.google.com/notebook/c54b9150-3cc9-487a-93d9-32510d144626?authuser=1"},
+  {slug:"network-administration",subject:"Network Administration and services (28572)",semester:"7th",buttonLabel:"Click Here",url:"https://notebooklm.google.com/notebook/170f55c8-dcb3-4e13-a7d7-d0fed3f4c389",heading:"Network administration - halka summary",intro:"Wanna access our notebooks?"},
+  {slug:"cyber-security-ethics",subject:"Cyber Security and Ethics (28573)",semester:"7th",buttonLabel:"Cyber Security Notebook",url:"https://notebooklm.google.com/notebook/5b355adc-1f54-4b01-a478-6753cb1fd0f1",heading:"Infographs for core basics"},
+  {slug:"apps-development-project",subject:"Apps Development Project (28574)",semester:"7th",buttonLabel:"Apps Dev Project",url:"https://notebooklm.google.com/notebook/60d2a80e-4989-4b29-be0e-80ef12b90078",heading:"Infographics",intro:"Click the button below to access our notebook."}
+];
+
+const COMING_SOON = {
+  "app-development-java":{subject:"App Development with Java",semester:"5th"},
+  "data-communication":{subject:"Data Communication",semester:"5th"},
+  "accounting":{subject:"Accounting",semester:"5th"},
+  "web-design-development-2":{subject:"Web Design and Development - 2",semester:"5th"},
+  "operating-system":{subject:"Operating System",semester:"5th"},
+  "project-work-1":{subject:"Project Work - 1",semester:"5th"},
+  "sensor-iot-system":{subject:"Sensor and IoT System",semester:"6th"},
+  "principles-marketing":{subject:"Principles of Marketing",semester:"6th"},
+  "computer-networking":{subject:"Computer Networking",semester:"6th"},
+  "multimedia-animation":{subject:"Multimedia and Animation",semester:"7th"},
+  "project-work-2":{subject:"Project Work-2 (28576)",semester:"7th"}
+};
+
+const SEMESTERS = [
+  {name:"5th Semester CST",file:"5th_semester.cst",slugs:["computer-architecture-microprocessor","app-development-java","data-communication","accounting","web-design-development-2","operating-system","project-work-1"]},
+  {name:"6th Semester CST",file:"6th_semester.cst",slugs:["sensor-iot-system","principles-marketing","computer-networking","industrial-management","surveillance-security-system","microcontroller-system-design","database-management-system"]},
+  {name:"7th Semester CST",file:"7th_semester.cst",slugs:["innovation-entrepreneurship","digital-marketing-techniques","network-administration","cyber-security-ethics","apps-development-project","multimedia-animation","project-work-2"]}
+];
+
+const LIVE_PROMPTS_PAGE = "https://sites.google.com/view/diplomabyte/productivity-promts?authuser=0";
+
+const PROMPTS = [
+  {slug:"notebooklm-pdf-prompts",title:"NotebookLM + PDF Smart Prompts",
+   prompt:"Act as my personal tutor. I have uploaded my chapter PDF.\n1) Summarize each topic in simple English.\n2) List the 10 most exam-relevant points.\n3) Explain every diagram in the PDF in one sentence each.\n4) Give 5 short-answer and 5 long-answer questions with model answers.\n5) Flag the parts students usually misunderstand."},
+  {slug:"notebooklm-pdf-pt2",title:"NotebookLM + PDF pt2",
+   prompt:"Continue as my tutor. From the same PDF:\n1) Make 20 MCQs with answers and explanations.\n2) Create flashcards (term on one side, definition on the other).\n3) Build a 1-page revision sheet I can read in 5 minutes.\n4) Suggest a 7-day spaced-repetition plan for this chapter.\n5) Generate an audio overview script in a friendly podcast style."},
+  {slug:"build-courses",title:"Build Courses",
+   prompt:"Build a complete mini-course from this syllabus topic:\n- Module list in learning order\n- 3 objectives per module\n- One video idea + one exercise per module\n- A final project with a grading rubric\nKeep everything aligned to the BTEB 2022 diploma syllabus."},
+  {slug:"extract-youtube-channel",title:"Extract Any Successful Youtube Channel",
+   prompt:"Analyze any successful YouTube channel I name.\n1) Break down its niche, target viewer and upload pattern.\n2) List its 10 most-viewed topics and why they worked.\n3) Reverse-engineer its title and thumbnail formulas.\n4) Give me a 30-day plan to copy its system, not its content."},
+  {slug:"presentation-claude-prompt",title:"Presentation Claude Prompt",
+   prompt:"Create a presentation on TOPIC for a diploma engineering class:\n- 10 slides, one idea per slide\n- Slide title + 3 bullet points + 1 speaker note each\n- One demo or story per 3 slides\n- A closing slide with 3 discussion questions"},
+  {slug:"ai-agent-instructions",title:"AI Agent Instructions",
+   prompt:"You are StudyBot, a syllabus-grounded study agent.\nRules: answer only from the uploaded sources; cite the source page; if unsure, say so; always end with one recall question; keep answers under 150 words; use simple English suitable for diploma students."},
+  {slug:"website-building-prompts",title:"Website Building Prompts",
+   prompt:"Generate a complete single-file website spec:\n- Purpose, audience, and the one primary conversion action\n- Section-by-section layout with copy\n- Accessible nav and footer structure\n- Clean HTML + CSS + vanilla JS, mobile-first, dark-mode ready"},
+  {slug:"image-upscalers",title:"Image Upscallers",
+   prompt:"Best free AI image upscalers for study infographics:\n1) Upscayl (free, open-source, desktop)\n2) BigJPG (line-art friendly)\n3) Waifu2x (great for diagrams)\nCleanup prompt: Upscale 4x, remove noise, keep text sharp, preserve original colors."},
+  {slug:"claude-prompt",title:"Claude Prompt",
+   prompt:"Think step by step. You are a senior diploma engineering tutor. For any topic I give: define it simply, give one real-life analogy, list key formulas and terms, show one solved example, then quiz me with 3 questions and grade my answers."},
+  {slug:"seven-secret-claude-prompts",title:"7 Secret Claude Prompts",
+   prompt:"1) Explain like I am a first-semester diploma student.\n2) What are the 20% of ideas that give 80% of the marks here?\n3) Turn this paragraph into a table.\n4) Find the mistakes in my answer and coach me.\n5) Give me a mnemonic for this list.\n6) Predict likely exam questions from this topic.\n7) Summarize this in 3 bullet points only."}
+];
+
+const STUDY_TIPS = [
+  {icon:"🎯",title:"Set a specific, challenging goal",body:"Locke & Latham (1990): clear goals outperform vague intentions."},
+  {icon:"🧘",title:"Visualize success 2-3x daily",body:"Cascio et al. (2016): self-affirmation activates reward circuits."},
+  {icon:"🔁",title:"Active recall > re-reading",body:"Roediger & Karpicke (2006): self-testing beats re-studying."},
+  {icon:"📆",title:"Space it out",body:"Cepeda et al.: distributed practice beats cramming."},
+  {icon:"🖼️",title:"Dual-code every concept",body:"Paivio (1971): words + diagrams + audio = stored twice."},
+  {icon:"🏃",title:"Move your body daily",body:"Harvard Health 2024: exercise spikes BDNF (Ratey, Spark)."},
+  {icon:"📝",title:"Read the exam paper first",body:"Budget time before writing. Strategic readers outscore."},
+  {icon:"🎧",title:"Study on the go",body:"Audio summaries turn commute time into study time."}
+];
+</script>
+
+<!-- ============================================================ -->
+<!-- =================== VIEW RENDERER + APP ==================== -->
+<!-- ============================================================ -->
+<script>
+const view = document.getElementById('view');
+const bookIcon = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>';
+const arrowExt = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>';
+const TK = ['tk-o','tk-g','tk-p','tk-c'];
+
+function subjBySlug(s){ return NOTEBOOKS.find(n=>n.slug===s) || COMING_SOON[s]; }
+
+function tipGrid(n){
+  const picks = [...STUDY_TIPS].sort(()=>Math.random()-0.5).slice(0,n||4);
+  return '<div class="grid md:grid-cols-2 gap-4 mb-8">'+picks.map(t=>
+    '<div class="tip-card flex gap-3"><div class="icon-chip shrink-0">'+t.icon+'</div><div><h4 class="font-semibold mb-1">'+t.title+'</h4><p class="text-sm text-[var(--text-muted)]">'+t.body+'</p></div></div>').join('')+'</div>';
+}
+
+function semesterCards(){
+  return '<section id="semesters" class="max-w-7xl mx-auto px-4 py-14 border-t border-[var(--border)]">'+
+    '<p class="section-tag mb-3">semesters</p>'+
+    '<div class="grid md:grid-cols-3 gap-6">'+SEMESTERS.map(sem=>{
+      const lines = sem.slugs.map((s,i)=>{
+        const m = subjBySlug(s);
+        return '<li class="flex items-start gap-1"><span class="ln">'+(i+1)+'</span>'+
+          '<button data-route="subject" data-slug="'+s+'" class="text-left text-sm hover:text-[var(--accent-solid)] '+TK[i%4]+'">'+m.subject+'</button></li>';
+      }).join('');
+      return '<div class="card"><h3 class="font-bold text-lg mb-3"><span class="clean-only">'+sem.name+'</span><span class="cse-only">'+sem.file+'</span></h3><ul class="space-y-1.5">'+lines+'</ul></div>';
+    }).join('')+'</div></section>';
+}
+
+function views_home(){
+  return `
+  <section class="max-w-7xl mx-auto px-4 py-16 md:py-20">
+    <div class="grid lg:grid-cols-2 gap-12 items-center">
+      <div>
+        <p class="section-tag mb-4">study_platform</p>
+        <h1 class="text-4xl md:text-5xl font-bold leading-tight mb-4">Study <span class="accent-text">Smart</span>,<br>not just hard.</h1>
+        <p lang="bn" class="text-lg md:text-xl text-[var(--text-muted)] mb-3">তুমি সারাদিন কত ঘণ্টা পড়ো? তোমার পড়ার উদ্দেশ্যটা কী?</p>
+        <p lang="bn" class="text-base text-[var(--text-muted)] mb-6">শুধু পরীক্ষায় পাস করা? নাকি একজন দক্ষ ডিপ্লোমা ইঞ্জিনিয়ার হওয়া?</p>
+        <div class="flex flex-wrap gap-3">
+          <button data-scroll="semesters" class="cta-primary">Explore Semesters</button>
+          <button data-route="about" class="cta-secondary">About Us</button>
+        </div>
+      </div>
+      <div class="term-window">
+        <div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="term-title">diplomabyte: ~</span></div>
+        <div class="term-line"><span class="tk-g">$ study_smart</span><br>Study_Smart, not just hard.</div>
+        <div class="video-wrapper">
+          <iframe src="https://www.youtube.com/embed/gm4q1KwK0Io" title="What is DiplomaByte?" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+  ${semesterCards()}
+  <section class="max-w-7xl mx-auto px-4 py-14 border-t border-[var(--border)]">
+    <p class="section-tag mb-3">proven_strategies</p>
+    <h2 class="text-3xl font-bold mb-2">Five Proven Strategies</h2>
+    <p class="text-[var(--text-muted)] mb-8">Backed by cognitive science — Roediger & Karpicke (2006), Cepeda et al.</p>
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <article class="card"><div class="icon-chip mb-3">🎯</div><h3 class="font-semibold text-lg mb-2">1. Set a clear vision</h3><p class="text-[var(--text-muted)] text-sm">Specific, challenging goals drive higher performance (Locke & Latham, 1990/2002).</p></article>
+      <article class="card"><div class="icon-chip mb-3">🧘</div><h3 class="font-semibold text-lg mb-2">2. Pretend you've already achieved it</h3><p class="text-[var(--text-muted)] text-sm">Visualization + affirmation 2–3x daily activates reward circuits (Cascio et al., 2016).</p></article>
+      <article class="card"><div class="icon-chip mb-3">🧠</div><h3 class="font-semibold text-lg mb-2">3. Develop a strategic mindset</h3><p class="text-[var(--text-muted)] text-sm">Read the full paper first, budget your time, then write.</p></article>
+      <article class="card"><div class="icon-chip mb-3">🔁</div><h3 class="font-semibold text-lg mb-2">4. Use every way to memorize</h3><p class="text-[var(--text-muted)] text-sm">Dual Coding Theory (Paivio, 1971): flashcards, infographics, MCQs, audio + visual.</p></article>
+      <article class="card"><div class="icon-chip mb-3">🏃</div><h3 class="font-semibold text-lg mb-2">5. The Power of Movement</h3><p class="text-[var(--text-muted)] text-sm">Exercise boosts BDNF (Harvard Health 2024; Ratey & Hagerman).</p></article>
+      <article class="card"><div class="icon-chip mb-3">📚</div><h3 class="font-semibold text-lg mb-2">Active recall + spaced repetition</h3><p class="text-[var(--text-muted)] text-sm">The strongest memory enhancers known to cognitive science.</p></article>
+    </div>
+  </section>
+  <section class="max-w-7xl mx-auto px-4 py-14 border-t border-[var(--border)]">
+    <p class="section-tag mb-3">platform_contents</p>
+    <h2 class="text-3xl font-bold mb-2">Contents of Our Platform</h2>
+    <p class="text-[var(--text-muted)] mb-8">Everything you need to master your diploma curriculum — mostly free.</p>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="card"><div class="icon-chip mb-3">📓</div><h3 class="font-semibold mb-1">NotebookLM Access</h3><p class="text-sm text-[var(--text-muted)]">Full notebooks, mostly free.</p></div>
+      <div class="card"><div class="icon-chip mb-3">🎬</div><h3 class="font-semibold mb-1">Video Lessons</h3><p class="text-sm text-[var(--text-muted)]">Per-chapter video content.</p></div>
+      <div class="card"><div class="icon-chip mb-3">🎧</div><h3 class="font-semibold mb-1">Audio Podcasts</h3><p class="text-sm text-[var(--text-muted)]">Learn on the go.</p></div>
+      <div class="card"><div class="icon-chip mb-3">💬</div><h3 class="font-semibold mb-1">Chapter Discussions</h3><p class="text-sm text-[var(--text-muted)]">Interactive debates.</p></div>
+      <div class="card"><div class="icon-chip mb-3">🖼️</div><h3 class="font-semibold mb-1">Visual Infographics</h3><p class="text-sm text-[var(--text-muted)]">Dual-coding visual aids.</p></div>
+      <div class="card"><div class="icon-chip mb-3">🗂️</div><h3 class="font-semibold mb-1">Flashcards</h3><p class="text-sm text-[var(--text-muted)]">Active recall built in.</p></div>
+      <div class="card"><div class="icon-chip mb-3">✅</div><h3 class="font-semibold mb-1">Practice Quizzes</h3><p class="text-sm text-[var(--text-muted)]">Test yourself constantly.</p></div>
+      <div class="card"><div class="icon-chip mb-3">🗺️</div><h3 class="font-semibold mb-1">Mindmaps</h3><p class="text-sm text-[var(--text-muted)]">Connect the dots.</p></div>
+    </div>
+  </section>
+  <section class="max-w-7xl mx-auto px-4 py-14 border-t border-[var(--border)]">
+    <p class="section-tag mb-4">productivity_prompts</p>
+    <div class="flex flex-wrap gap-3 mb-8">
+      ${PROMPTS.map(p=>'<button class="chip" data-route="prompt" data-slug="'+p.slug+'">'+p.title+'</button>').join('')}
+    </div>
+    <div class="card text-center max-w-2xl mx-auto">
+      <h2 class="text-2xl font-bold mb-3">Help us improve DiplomaByte</h2>
+      <p class="text-[var(--text-muted)] mb-6">Send us your feedback, request new features, and help shape the next version.</p>
+      <a href="https://forms.gle/sf3hpQVvmB2iJHTY8" target="_blank" rel="noopener noreferrer" class="cta-primary">Share feedback ${arrowExt}</a>
+    </div>
+  </section>`;
+}
+
+function views_about(){
+  return `
+  <section class="max-w-5xl mx-auto px-4 py-16">
+    <h1 class="text-4xl font-bold mb-6">About <span class="accent-text">DiplomaByte</span></h1>
+    <div class="card mb-8">
+      <p lang="bn" class="text-lg leading-relaxed">ডিপ্লোমাবাইট (DiplomaByte) হলো বাংলাদেশের ডিপ্লোমা ইঞ্জিনিয়ারিং শিক্ষার্থীদের জন্য একটি উদ্ভাবনী এআই-চালিত (AI-powered) এডটেক প্ল্যাটফর্ম। আমাদের মূল লক্ষ্য হলো ডিপ্লোমা শিক্ষার্থীদের পড়াশোনাকে আরও কার্যকর ও সহজ করা, যাতে তারা ঘণ্টার পর ঘণ্টা বই নিয়ে বসে না থেকেও কঠিন বিষয়গুলো দ্রুত আয়ত্ত করতে পারে।</p>
+    </div>
+    <h2 class="text-2xl font-bold mb-4">What you get</h2>
+    <div class="grid md:grid-cols-2 gap-4 mb-10">
+      <div class="card flex gap-4"><div class="icon-chip shrink-0">📱</div><div><h3 class="font-semibold">Audio Overview</h3><p class="text-sm text-[var(--text-muted)]">Headphone-friendly, podcast-style — great for commuting.</p></div></div>
+      <div class="card flex gap-4"><div class="icon-chip shrink-0">🧠</div><div><h3 class="font-semibold">Mindmaps & Infographics</h3><p class="text-sm text-[var(--text-muted)]">Quick-revision diagrams for complex topics.</p></div></div>
+      <div class="card flex gap-4"><div class="icon-chip shrink-0">✅</div><div><h3 class="font-semibold">Interactive Quizzes & Flashcards</h3><p class="text-sm text-[var(--text-muted)]">Smart self-testing in every notebook.</p></div></div>
+      <div class="card flex gap-4"><div class="icon-chip shrink-0">💬</div><div><h3 class="font-semibold">AI Chat Support</h3><p class="text-sm text-[var(--text-muted)]">Syllabus-grounded answers directly.</p></div></div>
+    </div>
+    <div class="card">
+      <h2 class="font-semibold mb-1">Who it's for</h2>
+      <p class="text-sm text-[var(--text-muted)] mb-3">Primarily for Computer (CST) diploma students, but useful free and premium resources exist for other departments too.</p>
+      <p class="accent-text font-bold text-lg">"Study Smart, not just hard."</p>
+    </div>
+    <h2 class="text-2xl font-bold mt-12 mb-4">Explore Our Other Digital Products</h2>
+    <a href="https://py-palace-academy.lovable.app" target="_blank" rel="noopener noreferrer" class="card block hover:border-[var(--accent-solid)] transition-colors">
+      <div class="flex items-center justify-between">
+        <div><h3 class="font-bold text-lg">Pyticon Learning</h3><p class="text-sm text-[var(--text-muted)]">A python learning platform for beginners.</p></div>
+        ${arrowExt}
+      </div>
+    </a>
+  </section>`;
+}
+
+function views_subject(slug){
+  const nb = NOTEBOOKS.find(n=>n.slug===slug);
+  const cs = COMING_SOON[slug];
+  if(!nb && !cs) return '<section class="max-w-5xl mx-auto px-4 py-16"><p>Subject not found.</p></section>';
+  if(nb){
+    const res = nb.resources && nb.resources.length
+      ? '<section class="mt-10"><h3 class="text-lg font-semibold mb-3">Supplementary Resources</h3><ul class="grid sm:grid-cols-2 gap-3">'+nb.resources.map(l=>'<li><span class="cta-secondary w-full"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>'+l+'</span></li>').join('')+'</ul></section>' : '';
+    return `
+    <section class="max-w-5xl mx-auto px-4 py-12">
+      <nav class="text-sm text-[var(--text-muted)] mb-6"><button data-route="home" class="hover:text-[var(--accent-solid)]">Home</button> / <span>${nb.semester} Semester CST</span> / <span class="text-[var(--text)] font-semibold">${nb.subject}</span></nav>
+      <h1 class="text-3xl md:text-4xl font-bold mb-6">${nb.subject}</h1>
+      ${nb.intro ? '<p class="text-[var(--text-muted)] mb-6">'+nb.intro+'</p>' : ''}
+      ${tipGrid(4)}
+      ${nb.heading ? '<h2 class="text-2xl font-bold mb-4 mt-4">'+nb.heading+'</h2>' : ''}
+      ${res}
+      <section class="notebook-hero mt-10">
+        <div class="relative">
+          <div class="flex items-center gap-3 mb-2">
+            <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">${bookIcon}</div>
+            <div><p class="text-xs uppercase tracking-wider opacity-80">NotebookLM · ${nb.semester} Semester CST</p><h3 class="text-xl font-bold">${nb.subject}</h3></div>
+          </div>
+          ${nb.priceNote ? '<p class="text-sm opacity-90 mt-2">'+nb.priceNote+'</p>' : ''}
+          <a href="${nb.url}" target="_blank" rel="noopener noreferrer" class="mt-5 inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold bg-white text-[#4338ca] hover:scale-[1.02] transition-transform">${bookIcon} ${nb.buttonLabel} ${arrowExt}</a>
+        </div>
+      </section>
+      <div class="mt-10 text-center">
+        <p class="text-sm text-[var(--text-muted)] mb-3">Help us improve DiplomaByte — share your feedback.</p>
+        <a href="https://forms.gle/sf3hpQVvmB2iJHTY8" target="_blank" rel="noopener noreferrer" class="cta-secondary text-sm">Send feedback ↗</a>
+      </div>
+    </section>`;
+  }
+  return `
+  <section class="max-w-5xl mx-auto px-4 py-12">
+    <nav class="text-sm text-[var(--text-muted)] mb-6"><button data-route="home" class="hover:text-[var(--accent-solid)]">Home</button> / <span>${cs.semester} Semester CST</span> / <span class="text-[var(--text)] font-semibold">${cs.subject}</span></nav>
+    <h1 class="text-3xl md:text-4xl font-bold mb-6">${cs.subject}</h1>
+    ${tipGrid(4)}
+    <div class="coming-soon-card mt-8">
+      <div class="inline-flex items-center gap-3 mb-3">
+        <div class="w-12 h-12 rounded-full bg-[var(--surface)] flex items-center justify-center text-2xl">🚧</div>
+        <div class="text-left"><p class="text-xs uppercase tracking-wider text-[var(--text-muted)]">${cs.semester} Semester CST</p><h2 class="text-xl font-bold text-[var(--text)]">${cs.subject}</h2></div>
+      </div>
+      <p class="text-[var(--text-muted)] max-w-md mx-auto mb-4">This notebook is under construction. Send a note via the feedback form to be notified when it launches.</p>
+      <button disabled class="px-5 py-2.5 rounded-xl font-semibold bg-[var(--border)] text-[var(--text-muted)] cursor-not-allowed">Coming Soon</button>
+    </div>
+    <div class="mt-10 text-center"><a href="https://forms.gle/sf3hpQVvmB2iJHTY8" target="_blank" rel="noopener noreferrer" class="cta-secondary text-sm">Request this subject ↗</a></div>
+  </section>`;
+}
+
+function views_promptList(){
+  return `
+  <section class="max-w-5xl mx-auto px-4 py-16">
+    <nav class="text-sm text-[var(--text-muted)] mb-6"><button data-route="home" class="hover:text-[var(--accent-solid)]">Home</button> / <span>Productivity Prompts</span></nav>
+    <p class="section-tag mb-3">smart_study_promts</p>
+    <h1 class="text-3xl md:text-4xl font-bold mb-2">Smart study promts</h1>
+    <p class="text-[var(--text-muted)] mb-4">Wanna self study using NotebookLM or other AI's? here's some promts that might help you.</p>
+    <a href="${LIVE_PROMPTS_PAGE}" target="_blank" rel="noopener noreferrer" class="cta-secondary text-sm mb-10">View original page (embedded files) ↗</a>
+    <div class="grid sm:grid-cols-2 gap-3 mt-8">
+      ${PROMPTS.map(p=>'<button data-route="prompt" data-slug="'+p.slug+'" class="card text-left hover:border-[var(--accent-solid)] transition-colors flex justify-between items-center"><span class="font-semibold">'+p.title+'</span>'+arrowExt+'</button>').join('')}
+    </div>
+  </section>`;
+}
+
+function views_prompt(slug){
+  const p = PROMPTS.find(x=>x.slug===slug);
+  if(!p) return '<section class="max-w-5xl mx-auto px-4 py-16"><p>Prompt not found.</p></section>';
+  return `
+  <section class="max-w-4xl mx-auto px-4 py-16">
+    <nav class="text-sm text-[var(--text-muted)] mb-6"><button data-route="home" class="hover:text-[var(--accent-solid)]">Home</button> / <button data-route="prompt-list" class="hover:text-[var(--accent-solid)]">Productivity Prompts</button> / <span class="text-[var(--text)]">${p.title}</span></nav>
+    <h1 class="text-3xl md:text-4xl font-bold mb-6">${p.title}</h1>
+    <div class="card">
+      <div class="flex items-center justify-between mb-4">
+        <span class="section-tag">prompt.txt</span>
+        <button class="chip" data-copy="${p.slug}">copy</button>
+      </div>
+      <pre class="prompt-box">${p.prompt}</pre>
+      <p class="text-xs text-[var(--text-muted)] mt-4">Source: <a href="${LIVE_PROMPTS_PAGE}" target="_blank" rel="noopener noreferrer" class="underline">diplomabyte — Productivity Promts</a> (original embedded files live here).</p>
+    </div>
+    <div class="mt-8"><button data-route="prompt-list" class="cta-secondary">← Back to all prompts</button></div>
+  </section>`;
+}
+
+/* ---------- routing ---------- */
+function navigate(route, slug){
+  let html = views_home();
+  if(route==='about') html = views_about();
+  else if(route==='subject') html = views_subject(slug);
+  else if(route==='prompt-list') html = views_promptList();
+  else if(route==='prompt') html = views_prompt(slug);
+  view.innerHTML = html;
+  window.scrollTo(0,0);
+}
+
+document.addEventListener('click', async e => {
+  const copyBtn = e.target.closest('[data-copy]');
+  if(copyBtn){
+    const p = PROMPTS.find(x=>x.slug===copyBtn.dataset.copy);
+    if(p){
+      try{ await navigator.clipboard.writeText(p.prompt); }
+      catch(_){ const ta=document.createElement('textarea'); ta.value=p.prompt; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); }
+      const old = copyBtn.textContent; copyBtn.textContent='copied ✓'; setTimeout(()=>copyBtn.textContent=old,1200);
+    }
+    return;
+  }
+  const scrollBtn = e.target.closest('[data-scroll]');
+  if(scrollBtn){ const el=document.getElementById(scrollBtn.dataset.scroll); if(el) el.scrollIntoView({behavior:'smooth'}); return; }
+  const nav = e.target.closest('[data-route]');
+  if(nav){
+    navigate(nav.dataset.route, nav.dataset.slug);
+    document.getElementById('mobile-drawer').classList.remove('open');
+    document.getElementById('drawer-backdrop').classList.remove('open');
+  }
+});
+
+/* ---------- build prompts dropdown from data ---------- */
+document.getElementById('dd-prompts').innerHTML =
+  PROMPTS.map(p=>'<li><button data-route="prompt" data-slug="'+p.slug+'">'+p.title+'</button></li>').join('');
+
+/* ---------- CSE mode toggle (replaces dark mode) ---------- */
+const MODE_KEY = 'diplomabyte-mode';
+function applyMode(m){ document.body.classList.toggle('cse', m==='cse'); localStorage.setItem(MODE_KEY, m); }
+applyMode(localStorage.getItem(MODE_KEY) || 'clean');
+document.getElementById('mode-toggle').addEventListener('click', () => {
+  applyMode(document.body.classList.contains('cse') ? 'clean' : 'cse');
+});
+
+/* ---------- drawer / accordion / dropdown ---------- */
+const drawer = document.getElementById('mobile-drawer');
+const backdrop = document.getElementById('drawer-backdrop');
+document.getElementById('hamburger-btn').addEventListener('click', ()=>{ drawer.classList.add('open'); backdrop.classList.add('open'); });
+backdrop.addEventListener('click', ()=>{ drawer.classList.remove('open'); backdrop.classList.remove('open'); });
+document.getElementById('drawer-close').addEventListener('click', ()=>{ drawer.classList.remove('open'); backdrop.classList.remove('open'); });
+document.querySelectorAll('[data-close-drawer]').forEach(el=>el.addEventListener('click', ()=>{ drawer.classList.remove('open'); backdrop.classList.remove('open'); }));
+document.querySelectorAll('.accordion-toggle').forEach(t=>t.addEventListener('click', ()=>t.nextElementSibling.classList.toggle('open')));
+document.querySelectorAll('.dropdown > button').forEach(t=>t.addEventListener('click', e=>{
+  if(window.innerWidth < 1024){
+    e.preventDefault();
+    const dd = t.closest('.dropdown');
+    const was = dd.getAttribute('data-open')==='true';
+    document.querySelectorAll('.dropdown[data-open]').forEach(d=>d.removeAttribute('data-open'));
+    if(!was) dd.setAttribute('data-open','true');
+  }
+}));
+
+/* ---------- init ---------- */
+navigate('home');
+document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
